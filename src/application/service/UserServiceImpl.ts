@@ -4,17 +4,27 @@ import { UserSuccessLoginDTO } from '../dto/user/UserSuccessLoginDTO'
 import { UserCreateDTO } from '../dto/user/UserCreateDTO'
 import { UserService } from '../ports/in/UserService'
 import { UserRepository } from '../ports/out/UserRepository'
+import { TokenGenerator } from '../ports/out/TokenGenerator'
 
 export class UserServiceImpl implements UserService {
 
-    private userRepository: UserRepository
-
-    constructor(userRepository: UserRepository) {
-        this.userRepository = userRepository
-    }
+    constructor(
+        private readonly userRepository: UserRepository,
+        private readonly tokenGenerator: TokenGenerator    
+    ) {}
 
     async authenticate(userLoginDTO: UserLoginDTO): Promise<UserSuccessLoginDTO> {
-        throw new Error('Method not implemented.');
+        const userMatches = await this.userRepository.match(new User({email: userLoginDTO.username, ...userLoginDTO}))
+
+        if(!userMatches){
+            throw new Error('Invalid login credentials!')
+        }
+
+        return {
+            jwtToken: await this.tokenGenerator.generate(userLoginDTO.username),
+            username: userLoginDTO.username
+        }
+
     }
 
     async register(userCreateDTO: UserCreateDTO): Promise<void> {
