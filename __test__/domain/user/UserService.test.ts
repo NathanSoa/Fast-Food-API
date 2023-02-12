@@ -3,11 +3,14 @@ import { UserCreateDTO } from '../../../src/application/dto/user/UserCreateDTO'
 import { UserService } from '../../../src/application/ports/in/UserService'
 import { UserServiceImpl } from '../../../src/application/service/UserServiceImpl'
 import { InMemoryUserRepository } from '../../../src/adapter/infra/repository/InMemoryUserRepository'
+import { UserLoginDTO } from '../../../src/application/dto/user/UserLoginDTO'
+import { JWTTokenGenerator } from '../../../src/adapter/infra/authentication/JWTTokenGenerator'
 
 describe('User use cases', () => {
- 
+
     const repository = new InMemoryUserRepository()
-    const service: UserService = new UserServiceImpl(repository)
+    const tokenGenerator = new JWTTokenGenerator()
+    const service: UserService = new UserServiceImpl(repository, tokenGenerator)
 
     beforeEach(() => {
         repository.items = new Array()
@@ -24,5 +27,16 @@ describe('User use cases', () => {
         await service.register(userCreateDTO)
         expect(service.register(userCreateDTO)).rejects.toThrow()
         expect(repository.items.length).toBe(1)
+    })
+
+    it('should authenticate an valid user', async () => {
+        const userCreateDTO: UserCreateDTO = {email: 'test@mail.com', password: 'supersecurepassword'}
+        const userLoginDTO: UserLoginDTO = {username: 'test@mail.com', password: 'supersecurepassword'}
+
+        await service.register(userCreateDTO)
+        const login = await service.authenticate(userLoginDTO)
+
+        expect(login.jwtToken).toBeTruthy()
+        expect(login.username).toBe(userLoginDTO.username)
     })
 })
