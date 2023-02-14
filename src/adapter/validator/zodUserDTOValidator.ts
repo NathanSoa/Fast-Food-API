@@ -7,16 +7,19 @@ import { UserDTOValidator } from '../../application/ports/out/UserDTOValidator'
 export class zodUserDTOValidator implements UserDTOValidator {
 
     validateUserRegister(input: any): UserCreateDTO {
-        try {
-            const userRegisterInputValidator = z.object({
-                    email: z.string().email('Invalid email format!'),
-                    password: z.string().min(8, 'Password should be more than 8 characteres long!')
-                })
-            userRegisterInputValidator.parse(input)
-        } catch(e) {
-            throw new ValidationError("Invalid input was sent!")
-        }
 
+        const userRegisterInputValidator = z.object({
+                email: z.string().email('Invalid email format!'),
+                password: z.string().min(8, 'Password should be more than 8 characteres long!')
+            })
+
+        const parsedData = userRegisterInputValidator.safeParse(input)
+
+        if(!parsedData.success) {
+            const formatedError = parsedData.error.format()
+            throw new ValidationError(JSON.stringify(formatedError))
+        }
+ 
         return {
             email: input.email,
             password: input.password
@@ -24,14 +27,16 @@ export class zodUserDTOValidator implements UserDTOValidator {
     }
     
     validateUserLogin(input: any): UserLoginDTO {
-        try {
-            const userRegisterInputValidator = z.object({
-                    username: z.string().email('Invalid email format!'),
-                    password: z.string().min(8, 'Password should be more than 8 characteres long!')
-                })
-            userRegisterInputValidator.parse(input)
-        } catch(e) {
-            throw new ValidationError("Invalid input was sent!")
+
+        const userRegisterInputValidator = z.object({
+                username: z.string().email('Invalid email format!'),
+                password: z.string().min(8, 'Password should be more than 8 characteres long!')
+            })
+        const parsedData = userRegisterInputValidator.safeParse(input)
+
+        if(!parsedData.success) {
+            const formatedError = parsedData.error.format()
+            throw new ValidationError(JSON.stringify(formatedError))
         }
 
         return {
