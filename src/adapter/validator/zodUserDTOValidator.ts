@@ -1,6 +1,5 @@
 import { z } from 'zod'
-import { UserCreateDTO } from '../../application/dto/user/UserCreateDTO'
-import { UserLoginDTO } from '../../application/dto/user/UserLoginDTO'
+import { UserCreateDTO,UserLoginDTO } from '../../application/dto/UserDTO'
 import { ValidationError } from '../../application/exception/ValidationError'
 import { UserDTOValidator } from '../../application/ports/out/UserDTOValidator'
 

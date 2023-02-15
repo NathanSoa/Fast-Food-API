@@ -1,5 +1,5 @@
 import { Restaurant } from '../domain/Restaurant'
-import { RestaurantCreateDTO } from '../dto/restaurant/RestaurantCreateDTO'
+import { RestaurantCreateDTO } from '../dto/RestaurantDTO'
 import { RestaurantService } from '../ports/in/RestaurantService'
 import { RestaurantRepository } from '../ports/out/RestaurantRepository'
 

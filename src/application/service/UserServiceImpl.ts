@@ -1,7 +1,5 @@
 import { User } from '../domain/User'
-import { UserLoginDTO } from '../dto/user/UserLoginDTO'
-import { UserSuccessLoginDTO } from '../dto/user/UserSuccessLoginDTO'
-import { UserCreateDTO } from '../dto/user/UserCreateDTO'
+import { UserCreateDTO, UserLoginDTO, UserSuccessLoginDTO } from '../dto/UserDTO'
 import { UserService } from '../ports/in/UserService'
 import { UserRepository } from '../ports/out/UserRepository'
 import { TokenGenerator } from '../ports/out/TokenGenerator'

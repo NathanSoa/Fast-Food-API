@@ -1,6 +1,4 @@
-import { UserCreateDTO } from '../../dto/user/UserCreateDTO'
-import { UserLoginDTO } from '../../dto/user/UserLoginDTO'
-import { UserSuccessLoginDTO } from '../../dto/user/UserSuccessLoginDTO'
+import { UserCreateDTO, UserLoginDTO, UserSuccessLoginDTO } from '../../dto/UserDTO'
 
 export interface UserService {
 

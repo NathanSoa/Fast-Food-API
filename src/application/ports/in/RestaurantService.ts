@@ -1,5 +1,5 @@
 import { Restaurant } from '../../domain/Restaurant'
-import { RestaurantCreateDTO } from '../../dto/restaurant/RestaurantCreateDTO'
+import { RestaurantCreateDTO } from '../../dto/RestaurantDTO'
 
 export interface RestaurantService {
 
