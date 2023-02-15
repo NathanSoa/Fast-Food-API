@@ -12,4 +12,8 @@ export class InMemoryRestaurantRepository implements RestaurantRepository {
     async existByName(name: string): Promise<boolean> {
         return this.items.filter(each => each.name === name).length > 0
     }
+    
+    async findById(id: string): Promise<Restaurant> {
+        return this.items.filter(each => each.id = id)[0]
+    }
 }
