@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { UserCreateDTO } from '../../../src/application/dto/user/UserCreateDTO'
-import { UserService } from '../../../src/application/ports/in/UserService'
-import { UserServiceImpl } from '../../../src/application/service/UserServiceImpl'
-import { InMemoryUserRepository } from '../../../src/adapter/infra/repository/InMemoryUserRepository'
-import { UserLoginDTO } from '../../../src/application/dto/user/UserLoginDTO'
-import { JWTTokenGenerator } from '../../../src/adapter/infra/authentication/JWTTokenGenerator'
+import { UserCreateDTO } from '../../src/application/dto/user/UserCreateDTO'
+import { UserService } from '../../src/application/ports/in/UserService'
+import { UserServiceImpl } from '../../src/application/service/UserServiceImpl'
+import { InMemoryUserRepository } from '../../src/adapter/infra/repository/InMemoryUserRepository'
+import { UserLoginDTO } from '../../src/application/dto/user/UserLoginDTO'
+import { JWTTokenGenerator } from '../../src/adapter/infra/authentication/JWTTokenGenerator'
 
 describe('User use cases', () => {
 
