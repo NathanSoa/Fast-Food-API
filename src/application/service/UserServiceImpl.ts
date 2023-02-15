@@ -3,6 +3,7 @@ import { UserCreateDTO, UserLoginDTO, UserSuccessLoginDTO } from '../dto/UserDTO
 import { UserService } from '../ports/in/UserService'
 import { UserRepository } from '../ports/out/UserRepository'
 import { TokenGenerator } from '../ports/out/TokenGenerator'
+import { DuplicatedEntityError } from '../exception/DuplicatedEntityError'
 
 export class UserServiceImpl implements UserService {
 
@@ -26,6 +27,12 @@ export class UserServiceImpl implements UserService {
     }
 
     async register(userCreateDTO: UserCreateDTO): Promise<void> {
+        const duplicatedEmail = await this.userRepository.existsByEmail(userCreateDTO.email)
+
+        if(duplicatedEmail){
+            throw new DuplicatedEntityError(`Email ${userCreateDTO.email} already in use`)
+        }
+
         await this.userRepository.create(new User(userCreateDTO))
         return 
     }
