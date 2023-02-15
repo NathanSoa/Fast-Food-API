@@ -3,8 +3,11 @@ import { RestaurantRepository } from '../../../application/ports/out/RestaurantR
 
 export class InMemoryRestaurantRepository implements RestaurantRepository {
 
-    create(restaurant: Restaurant): Promise<Restaurant> {
-        throw new Error("Method not implemented.");
+    items = new Array()
+
+    async create(restaurant: Restaurant): Promise<Restaurant> {
+        this.items.push(restaurant)
+        return restaurant
     }
 
 }
