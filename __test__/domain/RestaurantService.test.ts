@@ -31,4 +31,20 @@ describe('Restaurant use cases', () => {
         expect(createdRestaurant.meals.length).toBe(0)
 
     })
+
+    it('should throw an error if user try to register a restaurant with duplicated name', async () => {
+        const restaurantCreateDTO: RestaurantCreateDTO = {
+            name: "Great Restaurant",
+            address: {
+                streetName:"Restaurant street",
+                zipCode: "123321",
+                cityName: "Restaurant city",
+                stateName: "RS"
+            }
+        }
+
+        await restaurantService.register(restaurantCreateDTO)
+
+        expect(restaurantService.register(restaurantCreateDTO)).rejects.toThrow()
+    })
 })
