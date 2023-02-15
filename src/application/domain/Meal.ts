@@ -18,6 +18,7 @@ export class Meal {
 	categories: string[]
 
     constructor(props: mealProperties, id?:string) {
+        
         this.id = id || uuid()
         this.price = props.price
         this.description = props.description

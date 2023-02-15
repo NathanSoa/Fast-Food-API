@@ -11,10 +11,10 @@ export class InMemoryUserRepository implements UserRepository {
 
     async match(user: User): Promise<boolean> {
         return this.items
-        .filter(eachUser => eachUser.getEmail() === user.getEmail() && eachUser.getPassword() === user.getPassword()).length > 0
+        .filter(eachUser => eachUser.email === user.email && eachUser.password === user.password).length > 0
     }
 
     async existsByEmail(email: string): Promise<boolean> {
-        return this.items.filter(each => each.getEmail() === email).length > 0
+        return this.items.filter(each => each.email === email).length > 0
     }
 }

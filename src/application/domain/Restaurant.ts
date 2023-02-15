@@ -7,7 +7,6 @@ type restaurantProperties = {
     address: Address,
     meals: Meal[]
 }
-Error
 export class Restaurant {
 
     id: string
