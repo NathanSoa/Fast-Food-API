@@ -5,58 +5,27 @@ type mealProperties = {
     name: string,
     price: number,
     description: string,
-    restaurant: Restaurant,
+    restaurant: Restaurant | undefined,
     categories: string[]
 }
 
 export class Meal {
 
+	id: string
+	price: number
+	description: string
+	restaurant: Restaurant | undefined
+	categories: string[]
+
     constructor(props: mealProperties, id?:string) {
         this.id = id || uuid()
         this.price = props.price
         this.description = props.description
-        props.restaurant.meals = new Array()
-        this.restaurant = props.restaurant
         this.categories = props.categories
-    }
 
-	get id (): string {
-		return this.id
-	}
-
-	get price(): number {
-		return this.price
-	}
-
-	get description(): string {
-		return this.description
-	}
-
-	get restaurant(): Restaurant {
-		return this.restaurant
-	}
-
-	get categories(): string[] {
-		return this.categories
-	}
-	
-	set id(id: string) {
-		this.id = id
-	}
-
-	set price(price: number) {
-		this.price = price
-	}
-
-	set description(description: string) {
-		this.description = description
-	}
-
-	set restaurant(restaurant: Restaurant) {
-		this.restaurant = restaurant
-	}
-
-	set categories(categories: string[]) {
-		this.categories = categories
-	}    
+		if(props.restaurant) {
+			props.restaurant.meals = new Array()
+			this.restaurant = props.restaurant
+		}
+    }   
 }
