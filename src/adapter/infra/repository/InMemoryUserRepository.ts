@@ -1,5 +1,5 @@
 import { User } from "../../../application/domain/User"
-import { UserRepository } from "../../../application/ports/out/UserRepository"
+import { UserRepository } from "../../../application/ports/UserRepository"
 
 export class InMemoryUserRepository implements UserRepository {
 

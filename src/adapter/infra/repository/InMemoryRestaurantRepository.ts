@@ -1,5 +1,5 @@
 import { Restaurant } from '../../../application/domain/Restaurant'
-import { RestaurantRepository } from '../../../application/ports/out/RestaurantRepository'
+import { RestaurantRepository } from '../../../application/ports/RestaurantRepository'
 
 export class InMemoryRestaurantRepository implements RestaurantRepository {
     items = new Array()

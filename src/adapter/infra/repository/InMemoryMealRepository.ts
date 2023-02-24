@@ -1,5 +1,5 @@
 import { Meal } from '../../../application/domain/Meal'
-import { MealRepository } from '../../../application/ports/out/MealRepository'
+import { MealRepository } from '../../../application/ports/MealRepository'
 
 export class InMemoryMealRepository implements MealRepository {
     

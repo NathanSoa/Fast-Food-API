@@ -2,16 +2,14 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { InMemoryMealRepository } from '../../src/adapter/infra/repository/InMemoryMealRepository'
 import { InMemoryRestaurantRepository } from '../../src/adapter/infra/repository/InMemoryRestaurantRepository'
 import { RestaurantCreateDTO } from '../../src/application/dto/RestaurantDTO'
-import { RestaurantService } from '../../src/application/ports/in/RestaurantService'
-import { RestaurantServiceImpl } from '../../src/application/service/RestaurantServiceImpl'
 import { Meal } from '../../src/application/domain/Meal'
-import { Restaurant } from '../../src/application/domain/Restaurant'
+import { register } from '../../src/application/useCases/Restaurant/register'
+import { addMeal } from '../../src/application/useCases/Restaurant/addMeal'
 
 describe('Restaurant use cases', () => {
 
     const restaurantRepository = new InMemoryRestaurantRepository()
     const mealRepository = new InMemoryMealRepository()
-    const restaurantService: RestaurantService = new RestaurantServiceImpl(restaurantRepository, mealRepository)
 
     beforeEach(() => {
         restaurantRepository.items = new Array()
@@ -29,7 +27,7 @@ describe('Restaurant use cases', () => {
             }
         }
 
-        const createdRestaurant = await restaurantService.register(restaurantCreateDTO)
+        const createdRestaurant = await register(restaurantCreateDTO, restaurantRepository)
 
         expect(restaurantRepository.items.length).toBe(1)
         expect(createdRestaurant.id).toBeTruthy()
@@ -48,9 +46,9 @@ describe('Restaurant use cases', () => {
             }
         }
 
-        await restaurantService.register(restaurantCreateDTO)
+        await register(restaurantCreateDTO, restaurantRepository)
 
-        expect(restaurantService.register(restaurantCreateDTO)).rejects.toThrow()
+        expect(register(restaurantCreateDTO, restaurantRepository)).rejects.toThrow()
     })
 
     it('should add a new meal to restaurant', async () => {
@@ -76,10 +74,12 @@ describe('Restaurant use cases', () => {
         })
 
         mealRepository.items.push(meal)
-        let restaurant = await restaurantService.register(restaurantCreateDTO)
-        restaurant = await restaurantService.addMeal(restaurant.id, meal.id)
+        let restaurant = await register(restaurantCreateDTO, restaurantRepository)
+        restaurant = await addMeal(restaurant.id, meal.id, restaurantRepository, mealRepository)
 
         expect(mealRepository.items[0].restaurant).toBeTruthy()
         expect(restaurant.meals.length).toBe(1)
     })
+
+    // testar caso quando id não é achado, opção repetida no restaurante
 })

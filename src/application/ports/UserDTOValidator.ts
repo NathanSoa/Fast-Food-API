@@ -1,4 +1,4 @@
-import { UserCreateDTO, UserLoginDTO } from '../../dto/UserDTO'
+import { UserCreateDTO, UserLoginDTO } from '../dto/UserDTO'
 
 
 export interface UserDTOValidator {

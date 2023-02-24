@@ -1,15 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { UserService } from '../../src/application/ports/in/UserService'
-import { UserServiceImpl } from '../../src/application/service/UserServiceImpl'
 import { InMemoryUserRepository } from '../../src/adapter/infra/repository/InMemoryUserRepository'
 import { UserLoginDTO, UserCreateDTO } from '../../src/application/dto/UserDTO'
 import { JWTTokenGenerator } from '../../src/adapter/infra/authentication/JWTTokenGenerator'
+import { register } from '../../src/application/useCases/User/register'
+import { authenticate } from '../../src/application/useCases/User/authenticate'
 
 describe('User use cases', () => {
 
     const repository = new InMemoryUserRepository()
     const tokenGenerator = new JWTTokenGenerator()
-    const service: UserService = new UserServiceImpl(repository, tokenGenerator)
 
     beforeEach(() => {
         repository.items = new Array()
@@ -17,14 +16,14 @@ describe('User use cases', () => {
 
     it('should create a new user', async () => {
         const userCreateDTO: UserCreateDTO = {email: 'test@mail.com', password: 'supersecurepassword'}
-        await service.register(userCreateDTO)
+        await register(userCreateDTO, repository)
         expect(repository.items.length).toBe(1)
     })
 
     it('should throw error when user send a duplicated email', async () => {
         const userCreateDTO: UserCreateDTO = {email: 'test@mail.com', password: 'supersecurepassword'}
-        await service.register(userCreateDTO)
-        expect(service.register(userCreateDTO)).rejects.toThrow()
+        await register(userCreateDTO, repository)
+        expect(register(userCreateDTO, repository)).rejects.toThrow()
         expect(repository.items.length).toBe(1)
     })
 
@@ -32,8 +31,8 @@ describe('User use cases', () => {
         const userCreateDTO: UserCreateDTO = {email: 'test@mail.com', password: 'supersecurepassword'}
         const userLoginDTO: UserLoginDTO = {username: 'test@mail.com', password: 'supersecurepassword'}
 
-        await service.register(userCreateDTO)
-        const login = await service.authenticate(userLoginDTO)
+        await register(userCreateDTO, repository)
+        const login = await authenticate(userLoginDTO, repository, tokenGenerator)
 
         expect(login.jwtToken).toBeTruthy()
         expect(login.username).toBe(userLoginDTO.username)

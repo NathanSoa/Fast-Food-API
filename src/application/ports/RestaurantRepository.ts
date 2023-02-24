@@ -1,4 +1,4 @@
-import { Restaurant } from '../../domain/Restaurant'
+import { Restaurant } from '../domain/Restaurant'
 
 export interface RestaurantRepository {
 
