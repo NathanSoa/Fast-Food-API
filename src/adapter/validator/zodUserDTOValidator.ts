@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { UserCreateDTO,UserLoginDTO } from '../../application/dto/UserDTO'
 import { ValidationError } from '../../application/exception/ValidationError'
-import { UserDTOValidator } from '../../application/ports/out/UserDTOValidator'
+import { UserDTOValidator } from '../../application/ports/UserDTOValidator'
 
 export class zodUserDTOValidator implements UserDTOValidator {
 

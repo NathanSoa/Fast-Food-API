@@ -1,5 +1,5 @@
 import { sign } from 'jsonwebtoken'
-import { TokenGenerator } from '../../../application/ports/out/TokenGenerator'
+import { TokenGenerator } from '../../../application/ports/TokenGenerator'
 import { secret } from '../../../config/secret'
 
 
