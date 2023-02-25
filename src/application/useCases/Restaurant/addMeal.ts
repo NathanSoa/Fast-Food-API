@@ -1,7 +1,7 @@
-import { Meal } from "../../domain/Meal"
-import { Restaurant } from "../../domain/Restaurant"
-import { MealRepository } from "../../ports/MealRepository"
-import { RestaurantRepository } from "../../ports/RestaurantRepository"
+import { Meal } from '../../domain/Meal'
+import { Restaurant } from '../../domain/Restaurant'
+import { MealRepository } from '../../ports/MealRepository'
+import { RestaurantRepository } from '../../ports/RestaurantRepository'
 
 export async function addMeal(
         restaurantId: string, 
@@ -9,9 +9,14 @@ export async function addMeal(
         restaurantRepository: RestaurantRepository,
         mealRepository: MealRepository
     ): Promise<Restaurant> {
+
     const meal = await mealRepository.findById(mealId)
     const restaurant = await restaurantRepository.findById(restaurantId)
     
+    if(!restaurant) {
+        throw new Error(`Cannot find any restaurant with id: ${restaurantId}`)
+    }
+
     if(isMealNotDuplicated(meal, restaurant)) {
         meal.restaurant = restaurant
         restaurant.meals.push(meal)
@@ -19,7 +24,6 @@ export async function addMeal(
    
     return restaurant
 }
-
 
 function isMealNotDuplicated(meal: Meal, restaurant: Restaurant) {
     return restaurant.meals.filter(eachMeal => eachMeal.id === meal.id).length === 0
