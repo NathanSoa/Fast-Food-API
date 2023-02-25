@@ -2,6 +2,7 @@ import { Meal } from '../../domain/Meal'
 import { Restaurant } from '../../domain/Restaurant'
 import { MealRepository } from '../../ports/MealRepository'
 import { RestaurantRepository } from '../../ports/RestaurantRepository'
+import { assertMealAndRestaurantExistance } from './util/assertMealAndRestaurantExistance'
 
 export async function addMeal(
         restaurantId: string, 
@@ -13,12 +14,8 @@ export async function addMeal(
     const meal = await mealRepository.findById(mealId)
     const restaurant = await restaurantRepository.findById(restaurantId)
     
-    if(!restaurant) {
-        throw new Error(`Cannot find any restaurant with id: ${restaurantId}`)
-    }
-
-    if(!meal) {
-        throw new Error(`Cannot find any meal with id: ${mealId}`)
+    if(!assertMealAndRestaurantExistance(mealId, restaurantId, mealRepository, restaurantRepository)) {
+        throw new Error('Invalid ID was sent!')
     }
 
     if(isMealNotDuplicated(meal, restaurant)) {
