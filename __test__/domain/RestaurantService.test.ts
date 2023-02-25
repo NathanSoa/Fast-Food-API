@@ -62,11 +62,10 @@ describe('Restaurant use cases', () => {
             }
         }
 
-        const meal = new Meal({
+        const meal = Meal.withoutRestaurant({
             name: "Pizza",
             description: "Pizza",
             price: 30,
-            restaurant: undefined,
             categories: [
                 "Pizza",
                 "Fast Food"
@@ -81,5 +80,30 @@ describe('Restaurant use cases', () => {
         expect(restaurant.meals.length).toBe(1)
     })
 
-    // testar caso quando id não é achado, opção repetida no restaurante
+    it('should throw an error if cannot find any restaurant', async () => {
+        const restaurantCreateDTO: RestaurantCreateDTO = {
+            name: "Great Restaurant",
+            address: {
+                streetName:"Restaurant street",
+                zipCode: "123321",
+                cityName: "Restaurant city",
+                stateName: "RS"
+            }
+        }
+
+        const meal = Meal.withoutRestaurant({
+            name: "Pizza",
+            description: "Pizza",
+            price: 30,
+            categories: [
+                "Pizza",
+                "Fast Food"
+            ]
+        })
+
+        mealRepository.items.push(meal)
+        await register(restaurantCreateDTO, restaurantRepository)
+        
+        expect(addMeal("2342342342af", meal.id, restaurantRepository, mealRepository)).rejects.toThrow()
+    })
 })
