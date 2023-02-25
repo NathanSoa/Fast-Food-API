@@ -9,6 +9,21 @@ type mealProperties = {
     categories: string[]
 }
 
+type mealWithRestaurantProperties = {
+    name: string,
+    price: number,
+    description: string,
+    restaurant: Restaurant,
+    categories: string[]
+}
+
+type mealWithoutRestaurantProperties = {
+    name: string,
+    price: number,
+    description: string,
+    categories: string[]
+}
+
 export class Meal {
 
 	id: string
@@ -17,16 +32,20 @@ export class Meal {
 	restaurant: Restaurant | undefined
 	categories: string[]
 
-    constructor(props: mealProperties, id?:string) {
+    private constructor(props: mealProperties, id?:string) {
         
         this.id = id || uuid()
         this.price = props.price
         this.description = props.description
         this.categories = props.categories
+        this.restaurant = props.restaurant
+    }
+    
+    static withRestaurant(props: mealWithRestaurantProperties, id?: string): Meal {
+        return new Meal(props, id)
+    }
 
-		if(props.restaurant) {
-			props.restaurant.meals = new Array()
-			this.restaurant = props.restaurant
-		}
-    }   
+    static withoutRestaurant(props: mealWithoutRestaurantProperties, id?: string): Meal {
+        return new Meal({...props, restaurant: undefined}, id)
+    }
 }
