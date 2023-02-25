@@ -8,12 +8,21 @@ export class InMemoryRestaurantRepository implements RestaurantRepository {
         this.items.push(restaurant)
         return restaurant
     }
+ 
+    async update(restaurant: Restaurant): Promise<Restaurant> {
+        const databaseRestaurant = await this.findById(restaurant.id)
+        databaseRestaurant.name = restaurant.name
+        databaseRestaurant.address = restaurant.address
+        databaseRestaurant.meals = restaurant.meals
+
+        return databaseRestaurant
+    }
     
     async existByName(name: string): Promise<boolean> {
-        return this.items.filter(each => each.name === name).length > 0
+        return this.items.find(each => each.name === name)
     }
     
     async findById(id: string): Promise<Restaurant> {
-        return this.items.filter(each => each.id = id)[0]
+        return this.items.find(each => each.id === id)
     }
 }
