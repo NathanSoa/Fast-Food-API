@@ -106,4 +106,31 @@ describe('Restaurant use cases', () => {
         
         expect(addMeal("2342342342af", meal.id, restaurantRepository, mealRepository)).rejects.toThrow()
     })
+
+    it('should throw an error if cannot find any meal', async () => {
+        const restaurantCreateDTO: RestaurantCreateDTO = {
+            name: "Great Restaurant",
+            address: {
+                streetName:"Restaurant street",
+                zipCode: "123321",
+                cityName: "Restaurant city",
+                stateName: "RS"
+            }
+        }
+
+        const meal = Meal.withoutRestaurant({
+            name: "Pizza",
+            description: "Pizza",
+            price: 30,
+            categories: [
+                "Pizza",
+                "Fast Food"
+            ]
+        })
+
+        mealRepository.items.push(meal)
+        const restaurant = await register(restaurantCreateDTO, restaurantRepository)
+        
+        expect(addMeal(restaurant.id, "2342342342af", restaurantRepository, mealRepository)).rejects.toThrow()
+    })
 })

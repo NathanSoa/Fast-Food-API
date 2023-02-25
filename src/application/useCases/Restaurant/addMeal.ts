@@ -17,6 +17,10 @@ export async function addMeal(
         throw new Error(`Cannot find any restaurant with id: ${restaurantId}`)
     }
 
+    if(!meal) {
+        throw new Error(`Cannot find any meal with id: ${mealId}`)
+    }
+
     if(isMealNotDuplicated(meal, restaurant)) {
         meal.restaurant = restaurant
         restaurant.meals.push(meal)
