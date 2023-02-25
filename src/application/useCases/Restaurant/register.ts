@@ -1,7 +1,7 @@
-import { Restaurant } from "../../domain/Restaurant"
-import { RestaurantCreateDTO } from "../../dto/RestaurantDTO"
-import { DuplicatedEntityError } from "../../exception/DuplicatedEntityError"
-import { RestaurantRepository } from "../../ports/RestaurantRepository"
+import { Restaurant } from '../../domain/Restaurant'
+import { RestaurantCreateDTO } from '../../dto/RestaurantDTO'
+import { DuplicatedEntityError } from '../../exception/DuplicatedEntityError'
+import { RestaurantRepository } from '../../ports/RestaurantRepository'
 
 export async function register(
         restaurantCreateDTO: RestaurantCreateDTO,
@@ -12,11 +12,7 @@ export async function register(
         throw new DuplicatedEntityError(`Restaurant with name ${restaurantCreateDTO.name} already exists!`)
     }
 
-    const restaurant = new Restaurant({
-        name: restaurantCreateDTO.name, 
-        address: restaurantCreateDTO.address,
-        meals: new Array()
-    })
+    const restaurant = Restaurant.withoutMeal(restaurantCreateDTO)
     
     return await restaurantRepository.create(restaurant)
 }
