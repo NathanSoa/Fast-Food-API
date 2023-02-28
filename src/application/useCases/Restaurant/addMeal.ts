@@ -10,13 +10,13 @@ export async function addMeal(
         restaurantRepository: RestaurantRepository,
         mealRepository: MealRepository
     ): Promise<Restaurant> {
-
-    const meal = await mealRepository.findById(mealId)
-    const restaurant = await restaurantRepository.findById(restaurantId)
-    
+          
     if(!assertMealAndRestaurantExistance(mealId, restaurantId, mealRepository, restaurantRepository)) {
         throw new Error('Invalid ID was sent!')
     }
+
+    const meal = await mealRepository.findById(mealId)
+    const restaurant = await restaurantRepository.findById(restaurantId)
 
     if(isMealNotDuplicated(meal, restaurant)) {
         meal.restaurant = restaurant
