@@ -9,15 +9,18 @@
 
 ## CASOS DE USO
 
-### USUÁRIO FINAL
+### USUÁRIO FINAL GENÉRICO
 
-1. Registrar novos usuário
+1. Registrar novos usuários
 2. Autenticação de usuários
-3. Buscar comidas com filtro de categoria, restaurante
-4. Realizar um pedido que contenha uma ou mais comidas de um mesmo restaurante
-5. Pagamento do pedido
-6. Dar uma nota para o restaurante baseado na experiência do pedido
-7. Ver o histórico de pedidos anteriores
+
+### CLIENTE
+
+1. Buscar comidas com filtro de categoria, restaurante
+2. Realizar um pedido que contenha uma ou mais comidas de um mesmo restaurante
+3. Pagamento do pedido
+4. Dar uma nota para o restaurante baseado na experiência do pedido
+5. Ver o histórico de pedidos anteriores
 
 ### RESTAURANTE
 
@@ -28,9 +31,9 @@
 
 ### NÃO FUNCIONAL
 
-1. Usuários finais não podem pedir comidas de restaurantes diferentes no mesmo pedido
-2. Usuários finais só podem realizar avaliações sobre restaurantes após ter feito um pedido nele
-3. Usuários finais devem registrar 1 cartão de crédito para realizar compras
+1. Clientes não podem pedir comidas de restaurantes diferentes no mesmo pedido
+2. Clientes só podem realizar avaliações sobre restaurantes após ter feito um pedido nele
+3. Clientes devem registrar 1 cartão de crédito para realizar compras
 4. Toda nova opção de um restaurante deve conter 1 foto
 5. O pedido só é entregue ao restaurante após a confirmação do pagamento
 6. Pedidos que ultrapassarem 1 hora sem o pagamento serão cancelados automáticamente
