@@ -5,6 +5,7 @@ import { RestaurantCreateDTO } from '../../src/application/dto/RestaurantDTO'
 import { Meal } from '../../src/application/domain/Meal'
 import { register } from '../../src/application/useCases/Restaurant/register'
 import { addMeal } from '../../src/application/useCases/Restaurant/addMeal'
+import { removeMeal } from '../../src/application/useCases/Restaurant/removeMeal'
 
 describe('Restaurant use cases', () => {
 
@@ -132,5 +133,36 @@ describe('Restaurant use cases', () => {
         const restaurant = await register(restaurantCreateDTO, restaurantRepository)
         
         expect(addMeal(restaurant.id, "2342342342af", restaurantRepository, mealRepository)).rejects.toThrow()
+    })
+
+    it('should remove a meal', async () => {
+        const restaurantCreateDTO: RestaurantCreateDTO = {
+            name: "Great Restaurant",
+            address: {
+                streetName:"Restaurant street",
+                zipCode: "123321",
+                cityName: "Restaurant city",
+                stateName: "RS"
+            }
+        }
+
+        const meal = Meal.withoutRestaurant({
+            name: "Pizza",
+            description: "Pizza",
+            price: 30,
+            categories: [
+                "Pizza",
+                "Fast Food"
+            ]
+        })
+
+        mealRepository.items.push(meal)
+        let restaurant = await register(restaurantCreateDTO, restaurantRepository)
+        restaurant.meals.push(meal)
+
+        restaurant = await removeMeal(restaurant.id, meal.id, restaurantRepository, mealRepository)
+        
+        expect(restaurant.meals.length).toBe(0)
+        expect(meal.restaurant).toBeFalsy()
     })
 })
