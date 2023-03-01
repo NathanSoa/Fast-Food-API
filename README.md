@@ -1,20 +1,37 @@
 # FAST FOOD API
 
-## ABOUT
+![Badge em Desenvolvimento](https://img.shields.io/badge/STATUS-EM%20DESENVOLVIMENTO-brightgreen)
 
-This is an API designed to simulate a food delivery app.
+## SOBRE O PROJETO
 
-## USE CASES
+- Essa é uma API com o propósito de simular uma aplicação de pedidos e entregas de alimentos.
+- O propósito do projeto é aprender e praticar conceitos da arquitetura de software e tecnologias do desenvolvimento back-end.
 
-1. Register new users
-2. Authenticate users
-3. User can filter foods by category
-4. User can place an order for food
-5. User payment for the order
-6. Update the status of an order
-7. Get all orders history for any user
-8. User can rate the restaurant
-9. Register new restaurants
-10. Add food option for restaurants
-11. Update menu option for restaurants
-12. Delete menu option for restaurants
+## CASOS DE USO
+
+### USUÁRIO FINAL
+
+1. Registrar novos usuário
+2. Autenticação de usuários
+3. Buscar comidas com filtro de categoria, restaurante
+4. Realizar um pedido que contenha uma ou mais comidas de um mesmo restaurante
+5. Pagamento do pedido
+6. Dar uma nota para o restaurante baseado na experiência do pedido
+7. Ver o histórico de pedidos anteriores
+
+### RESTAURANTE
+
+1. Adicionar novas opções no cardápio do restaurante
+2. Atualizar uma opção do cardápio
+3. Remover uma opção do cardápio
+4. Atualizar status de entrega de um pedido
+
+### NÃO FUNCIONAL
+
+1. Usuários finais não podem pedir comidas de restaurantes diferentes no mesmo pedido
+2. Usuários finais só podem realizar avaliações sobre restaurantes após ter feito um pedido nele
+3. Usuários finais devem registrar 1 cartão de crédito para realizar compras
+4. Toda nova opção de um restaurante deve conter 1 foto
+5. O pedido só é entregue ao restaurante após a confirmação do pagamento
+6. Pedidos que ultrapassarem 1 hora sem o pagamento serão cancelados automáticamente
+7. Usuários finais que cancelarem o pedido após confirmação do pagamento, terão uma cobrança adicional de 50% do valor do pedido
