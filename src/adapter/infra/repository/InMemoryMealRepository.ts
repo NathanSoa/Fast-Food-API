@@ -4,9 +4,9 @@ import { mealFilterParams } from '../../../application/useCases/Customer/findMea
 
 export class InMemoryMealRepository implements MealRepository {
     
-    items: Meal[] = new Array()
+    items = new Array()
     
-    async findById(id: string): Promise<Meal | undefined> {
+    async findById(id: string): Promise<Meal> {
        return this.items.find(each => each.id === id)
     }
 
