@@ -50,6 +50,7 @@ describe('Restaurant use cases', () => {
         await register(restaurantCreateDTO, restaurantRepository)
 
         expect(register(restaurantCreateDTO, restaurantRepository)).rejects.toThrow()
+        expect(restaurantRepository.items.length).toBe(1)
     })
 
     it('should add a new meal to restaurant', async () => {
