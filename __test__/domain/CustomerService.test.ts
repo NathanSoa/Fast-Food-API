@@ -67,4 +67,11 @@ describe('Customer use cases', () => {
         expect(filteredMeals).toBeTruthy()
         expect(filteredMeals.length).toBe(2)
     })
+
+    it('should return all meals if no filter is sent', async () => {
+        const filteredMeals = await findMeal(mealRepository, {})
+
+        expect(filteredMeals).toBeTruthy()
+        expect(filteredMeals.length).toBe(4)
+    })
 })
