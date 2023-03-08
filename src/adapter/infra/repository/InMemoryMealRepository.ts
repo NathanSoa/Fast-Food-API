@@ -11,7 +11,7 @@ export class InMemoryMealRepository implements MealRepository {
     }
 
     async findFiltered(filters: mealFilterParams): Promise<Meal[]> {
-        let meals = new Array()
+        let meals = this.items
                     
         if(filters.name) {
             meals = this.items.filter(each => each.description === filters.name)
