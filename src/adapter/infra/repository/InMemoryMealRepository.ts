@@ -18,7 +18,7 @@ export class InMemoryMealRepository implements MealRepository {
         }
 
         if(filters.restaurant) {
-            meals = this.items.filter(each => each.restaurant?.name === filters.restaurant)
+            meals = this.items.filter(each => each.restaurant?.id === filters.restaurant)
         }
 
         if(filters.maxPrice) {
