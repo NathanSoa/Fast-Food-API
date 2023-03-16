@@ -1,5 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest'
+import { v4 as uuid } from 'uuid'
 import { InMemoryMealRepository } from '../../src/adapter/infra/repository/InMemoryMealRepository'
+import { InMemoryRestaurantRepository } from '../../src/adapter/infra/repository/InMemoryRestaurantRepository'
 import { Meal } from '../../src/application/domain/Meal'
 import { Restaurant } from '../../src/application/domain/Restaurant'
 import { findMeal } from '../../src/application/useCases/Customer/findMeal'
@@ -7,6 +9,8 @@ import { findMeal } from '../../src/application/useCases/Customer/findMeal'
 describe('Customer use cases', () => {
 
     const mealRepository = new InMemoryMealRepository()
+    const restaurantId = uuid()
+    const restaurantRepository = new InMemoryRestaurantRepository()
 
     beforeAll(() => {
         mealRepository.items = new Array()
@@ -19,7 +23,9 @@ describe('Customer use cases', () => {
                 streetName: 'Street',
                 zipCode: 'Zip Code'
             }
-        })
+        }, restaurantId)
+
+        restaurantRepository.create(testRestaurant)
 
         mealRepository.items.push(Meal.withRestaurant({
             name: 'Burger',
@@ -62,7 +68,8 @@ describe('Customer use cases', () => {
     })
 
     it('should filter meals correctly', async () => {
-        const filteredMeals = await findMeal(mealRepository, {restaurant: 'Test Restaurant', maxPrice: 20})
+        const restaurant = await restaurantRepository.findById(restaurantId)
+        const filteredMeals = await findMeal(mealRepository, {restaurant: restaurant.id, maxPrice: 20})
 
         expect(filteredMeals).toBeTruthy()
         expect(filteredMeals.length).toBe(2)
