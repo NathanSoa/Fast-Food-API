@@ -5,6 +5,8 @@ import { InMemoryRestaurantRepository } from '../../src/adapter/infra/repository
 import { Meal } from '../../src/application/domain/Meal'
 import { Restaurant } from '../../src/application/domain/Restaurant'
 import { findMeal } from '../../src/application/useCases/Customer/findMeal'
+import { Order } from '../../src/application/domain/Order'
+import { placeOrder } from '../../src/application/useCases/Customer/placeOrder'
 
 describe('Customer use cases', () => {
 
@@ -80,5 +82,33 @@ describe('Customer use cases', () => {
 
         expect(filteredMeals).toBeTruthy()
         expect(filteredMeals.length).toBe(4)
+    })
+
+    it('should throw an error if invalid meal is sent to place an order', async () => {
+        const frenchFries = mealRepository.items.find(meal => meal.name === 'French Fries')
+        const burger = mealRepository.items.find(meal => meal.name === 'Burger')
+
+        const order = Order.NewOne({
+            customerId: uuid(),
+            deliverAddress: {
+                cityName: 'City',
+                stateName: 'State',
+                streetName: 'Street',
+                zipCode: 'Zip Code'
+            },
+            orderItems: [
+                {
+                    mealId: frenchFries.id,
+                    quantity: 1
+                },
+                {
+                    mealId: burger.id,
+                    quantity: 2
+                }
+            ],
+            restaurantId
+        })
+
+        expect(placeOrder(order, restaurantRepository)).rejects.toThrow()
     })
 })
