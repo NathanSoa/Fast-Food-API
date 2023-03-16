@@ -27,6 +27,7 @@ type mealWithoutRestaurantProperties = {
 export class Meal {
 
 	id: string
+    name: string
 	price: number
 	description: string
 	restaurant: Restaurant | undefined
@@ -35,6 +36,7 @@ export class Meal {
     private constructor(props: mealProperties, id?:string) {
         
         this.id = id || uuid()
+        this.name = props.name
         this.price = props.price
         this.description = props.description
         this.categories = props.categories
