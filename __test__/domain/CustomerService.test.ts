@@ -5,14 +5,16 @@ import { InMemoryRestaurantRepository } from '../../src/adapter/infra/repository
 import { Meal } from '../../src/application/domain/Meal'
 import { Restaurant } from '../../src/application/domain/Restaurant'
 import { findMeal } from '../../src/application/useCases/Customer/findMeal'
-import { Order } from '../../src/application/domain/Order'
+import { Order, OrderStatus } from '../../src/application/domain/Order'
 import { placeOrder } from '../../src/application/useCases/Customer/placeOrder'
+import { InMemoryOrderRepository } from '../../src/adapter/infra/repository/InMemoryOrderRepository'
 
 describe('Customer use cases', () => {
 
     const mealRepository = new InMemoryMealRepository()
     const restaurantId = uuid()
     const restaurantRepository = new InMemoryRestaurantRepository()
+    const orderRepository = new InMemoryOrderRepository()
 
     beforeAll(() => {
         mealRepository.items = new Array()
@@ -29,7 +31,7 @@ describe('Customer use cases', () => {
 
         restaurantRepository.create(testRestaurant)
 
-        mealRepository.items.push(Meal.withRestaurant({
+        const burger = Meal.withRestaurant({
             name: 'Burger',
             categories: [
                 'Fast Food'
@@ -37,9 +39,9 @@ describe('Customer use cases', () => {
             price: 20,
             description: 'Very Nice Burger',
             restaurant: testRestaurant
-        }))
+        })
 
-        mealRepository.items.push(Meal.withRestaurant({
+        const megaBurger = Meal.withRestaurant({
             name: 'Mega Burger',
             categories: [
                 'Fast Food'
@@ -47,9 +49,9 @@ describe('Customer use cases', () => {
             price: 30,
             description: 'Very Nice Mega Burger',
             restaurant: testRestaurant
-        }))
+        })
 
-        mealRepository.items.push(Meal.withRestaurant({
+        const salad = Meal.withRestaurant({
             name: 'Salad',
             categories: [
                 'Health'
@@ -57,7 +59,7 @@ describe('Customer use cases', () => {
             price: 10,
             description: 'Very Nice Salad',
             restaurant: testRestaurant
-        }))
+        })
 
         mealRepository.items.push(Meal.withoutRestaurant({
             name: 'French Fries',
@@ -67,6 +69,9 @@ describe('Customer use cases', () => {
             price: 15,
             description: 'Very Nice French Fries'
         }))
+
+        mealRepository.items.push(burger, megaBurger, salad)
+        testRestaurant.meals.push(burger, megaBurger, salad)
     })
 
     it('should filter meals correctly', async () => {
@@ -84,11 +89,42 @@ describe('Customer use cases', () => {
         expect(filteredMeals.length).toBe(4)
     })
 
+    it('should correctly place an order', async () => {
+        const megaBurger = mealRepository.items.find(meal => meal.name === 'Mega Burger')
+        const burger = mealRepository.items.find(meal => meal.name === 'Burger')
+
+        const order = {
+            customerId: uuid(),
+            deliverAddress: {
+                cityName: 'City',
+                stateName: 'State',
+                streetName: 'Street',
+                zipCode: 'Zip Code'
+            },
+            orderItems: [
+                {
+                    mealId: megaBurger.id,
+                    quantity: 1
+                },
+                {
+                    mealId: burger.id,
+                    quantity: 2
+                }
+            ],
+            restaurantId
+        }
+
+        await placeOrder(order, restaurantRepository, orderRepository)
+        
+        expect(orderRepository.items.length).toBe(1)
+        expect(orderRepository.items[0].status).toBe(OrderStatus.AWAITING_PAYMENT)
+    })
+
     it('should throw an error if invalid meal is sent to place an order', async () => {
         const frenchFries = mealRepository.items.find(meal => meal.name === 'French Fries')
         const burger = mealRepository.items.find(meal => meal.name === 'Burger')
 
-        const order = Order.NewOne({
+        const order = {
             customerId: uuid(),
             deliverAddress: {
                 cityName: 'City',
@@ -107,8 +143,8 @@ describe('Customer use cases', () => {
                 }
             ],
             restaurantId
-        })
+        }
 
-        expect(placeOrder(order, restaurantRepository)).rejects.toThrow()
+        expect(placeOrder(order, restaurantRepository, orderRepository)).rejects.toThrow()
     })
 })
