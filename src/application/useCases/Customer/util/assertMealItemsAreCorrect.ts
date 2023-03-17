@@ -17,7 +17,7 @@ export async function assertMealItemsAreCorrect(
             }
 
             if(!exist) {
-                throw new Error(`An invalid was sent!`)
+                throw new Error(`An invalid meal was sent!`)
             }
         }
 }
