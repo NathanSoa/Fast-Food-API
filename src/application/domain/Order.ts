@@ -19,7 +19,8 @@ type OrderPropertiesWithoutStatus = {
     customerId: string,
     restaurantId: string,
     orderItems: OrderItem[],
-    deliverAddress: Address
+    deliverAddress: Address,
+    total: number
 }
 
 type OrderProperties = {
@@ -27,6 +28,7 @@ type OrderProperties = {
     restaurantId: string,
     orderItems: OrderItem[],
     deliverAddress: Address,
+    total: number,
     status: OrderStatus
 }
 
@@ -36,6 +38,7 @@ export class Order {
     restaurantId: string
     orderItems: OrderItem[]
     deliverAddress: Address
+    total: number
     status: OrderStatus
 
     private constructor(props: OrderProperties, id?:string) {
@@ -44,6 +47,7 @@ export class Order {
         this.restaurantId = props.restaurantId
         this.orderItems = props.orderItems
         this.deliverAddress = props.deliverAddress
+        this.total = props.total
         this.status = props.status
     }
 
