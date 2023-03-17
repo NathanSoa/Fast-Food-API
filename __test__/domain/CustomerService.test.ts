@@ -114,10 +114,11 @@ describe('Customer use cases', () => {
             restaurantId
         }
 
-        await placeOrder(order, restaurantRepository, orderRepository)
-        
+        const newOrder = await placeOrder(order, restaurantRepository, orderRepository, mealRepository)
+
         expect(orderRepository.items.length).toBe(1)
-        expect(orderRepository.items[0].status).toBe(OrderStatus.AWAITING_PAYMENT)
+        expect(newOrder.status).toBe(OrderStatus.AWAITING_PAYMENT)
+        expect(newOrder.total).toBe(megaBurger.price + burger.price * 2)
     })
 
     it('should throw an error if invalid meal is sent to place an order', async () => {
@@ -145,6 +146,6 @@ describe('Customer use cases', () => {
             restaurantId
         }
 
-        expect(placeOrder(order, restaurantRepository, orderRepository)).rejects.toThrow()
+        expect(placeOrder(order, restaurantRepository, orderRepository, mealRepository)).rejects.toThrow()
     })
 })
