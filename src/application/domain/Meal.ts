@@ -43,6 +43,10 @@ export class Meal {
         this.restaurant = props.restaurant
     }
     
+    public calculateTotal(amount: number): number {
+        return this.price * amount
+    }
+
     static withRestaurant(props: mealWithRestaurantProperties, id?: string): Meal {
         return new Meal(props, id)
     }
