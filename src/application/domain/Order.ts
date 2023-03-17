@@ -6,11 +6,28 @@ export type OrderItem = {
     quantity: number
 }
 
-type OrderProperties = {
+export enum OrderStatus {
+    CANCELLED,
+    AWAITING_PAYMENT,
+    PAID,
+    BEING_PREPARED,
+    OUT_FOR_DELIVERY,
+    DELIVERED
+}
+
+type OrderPropertiesWithoutStatus = {
     customerId: string,
     restaurantId: string,
     orderItems: OrderItem[],
     deliverAddress: Address
+}
+
+type OrderProperties = {
+    customerId: string,
+    restaurantId: string,
+    orderItems: OrderItem[],
+    deliverAddress: Address,
+    status: OrderStatus
 }
 
 export class Order {
@@ -19,6 +36,7 @@ export class Order {
     restaurantId: string
     orderItems: OrderItem[]
     deliverAddress: Address
+    status: OrderStatus
 
     private constructor(props: OrderProperties, id?:string) {
         this.id = id || uuid()
@@ -26,9 +44,10 @@ export class Order {
         this.restaurantId = props.restaurantId
         this.orderItems = props.orderItems
         this.deliverAddress = props.deliverAddress
+        this.status = props.status
     }
 
-    static NewOne(props: OrderProperties) {
-        return new Order(props)
+    static NewOne(props: OrderPropertiesWithoutStatus) {
+        return new Order({...props, status: OrderStatus.AWAITING_PAYMENT})
     }
 }
