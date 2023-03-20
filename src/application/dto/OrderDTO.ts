@@ -7,3 +7,8 @@ export type PlaceNewOrderDTO = {
     orderItems: OrderItem[]
     deliverAddress: Address
 }
+
+export type PayOrderDTO = {
+    customerId: string, 
+    orderId: string
+}
