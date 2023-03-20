@@ -1,20 +1,29 @@
-import { beforeAll, describe, expect, it } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { v4 as uuid } from 'uuid'
 import { InMemoryMealRepository } from '../../src/adapter/infra/repository/InMemoryMealRepository'
 import { InMemoryRestaurantRepository } from '../../src/adapter/infra/repository/InMemoryRestaurantRepository'
 import { Meal } from '../../src/application/domain/Meal'
+import { Customer } from '../../src/application/domain/Customer'
 import { Restaurant } from '../../src/application/domain/Restaurant'
 import { findMeal } from '../../src/application/useCases/Customer/findMeal'
 import { Order, OrderStatus } from '../../src/application/domain/Order'
 import { placeOrder } from '../../src/application/useCases/Customer/placeOrder'
 import { InMemoryOrderRepository } from '../../src/adapter/infra/repository/InMemoryOrderRepository'
+import { InMemoryCustomerRepository } from '../../src/adapter/infra/repository/InMemoryCustomerRepository'
+import { payOrder } from '../../src/application/useCases/Customer/payOrder'
+import { MockPaymentGateway } from '../../src/adapter/gateway/MockPaymentGateway'
 
 describe('Customer use cases', () => {
 
     const mealRepository = new InMemoryMealRepository()
-    const restaurantId = uuid()
     const restaurantRepository = new InMemoryRestaurantRepository()
     const orderRepository = new InMemoryOrderRepository()
+    const customerRepository = new InMemoryCustomerRepository()
+
+    const successPaymentGateway = new MockPaymentGateway()
+
+    const restaurantId = uuid()
+    const customerId = uuid()
 
     beforeAll(() => {
         mealRepository.items = new Array()
@@ -72,6 +81,18 @@ describe('Customer use cases', () => {
 
         mealRepository.items.push(burger, megaBurger, salad)
         testRestaurant.meals.push(burger, megaBurger, salad)
+
+        const costumer = new Customer({
+            birthdate: new Date('2000-01-01'),
+            cardNumber: '1234 5678 9012',
+            name: 'Customer'
+        }, customerId)
+
+        customerRepository.items.push(costumer)
+    })
+
+    beforeEach(() => {
+        orderRepository.items = new Array()
     })
 
     it('should filter meals correctly', async () => {
@@ -147,5 +168,40 @@ describe('Customer use cases', () => {
         }
 
         expect(placeOrder(order, restaurantRepository, orderRepository, mealRepository)).rejects.toThrow()
+    })
+
+    it('should correctly update the order status', async () => {
+        const megaBurger = mealRepository.items.find(meal => meal.name === 'Mega Burger')
+        const burger = mealRepository.items.find(meal => meal.name === 'Burger')
+
+        const order = {
+            deliverAddress: {
+                cityName: 'City',
+                stateName: 'State',
+                streetName: 'Street',
+                zipCode: 'Zip Code'
+            },
+            orderItems: [
+                {
+                    mealId: megaBurger.id,
+                    quantity: 1
+                },
+                {
+                    mealId: burger.id,
+                    quantity: 2
+                }
+            ],
+            restaurantId,
+            customerId
+        }
+
+        let thisOrder = await placeOrder(order, restaurantRepository, orderRepository, mealRepository)
+
+        const success = await payOrder({customerId, orderId: thisOrder.id}, orderRepository, customerRepository, successPaymentGateway)
+    
+        thisOrder = await orderRepository.findById(thisOrder.id)
+        
+        expect(success).toBeTruthy()
+        expect(thisOrder.status).toBe(OrderStatus.PAID)
     })
 })
