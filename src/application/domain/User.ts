@@ -9,6 +9,7 @@ export class User {
     id: string
     email: string
     password: string
+    accountId?: string
 
     constructor(props: userProperties, id?: string){
         this.id = id || uuid()
