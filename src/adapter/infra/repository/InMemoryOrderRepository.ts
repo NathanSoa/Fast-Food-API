@@ -1,4 +1,4 @@
-import { Order } from '../../../application/domain/Order'
+import { Order, OrderStatus } from '../../../application/domain/Order'
 import { OrderRepository } from '../../../application/ports/OrderRepository'
 
 export class InMemoryOrderRepository implements OrderRepository {
@@ -12,5 +12,12 @@ export class InMemoryOrderRepository implements OrderRepository {
     
     async findById(id: string): Promise<Order> {
         return this.items.find(each => each.id === id)
+    }
+
+    async updateStatus(id: string, orderStatus: OrderStatus): Promise<void> {
+        const order = await this.findById(id)
+        console.log(`before repo update: ${order.status}`)
+        order.status = orderStatus
+        console.log(`after repo update: ${order.status}`)
     }
 }
