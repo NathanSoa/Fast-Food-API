@@ -16,8 +16,6 @@ export class InMemoryOrderRepository implements OrderRepository {
 
     async updateStatus(id: string, orderStatus: OrderStatus): Promise<void> {
         const order = await this.findById(id)
-        console.log(`before repo update: ${order.status}`)
         order.status = orderStatus
-        console.log(`after repo update: ${order.status}`)
     }
 }
