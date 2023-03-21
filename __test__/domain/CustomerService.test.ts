@@ -11,7 +11,7 @@ import { placeOrder } from '../../src/application/useCases/Customer/placeOrder'
 import { InMemoryOrderRepository } from '../../src/adapter/infra/repository/InMemoryOrderRepository'
 import { InMemoryCustomerRepository } from '../../src/adapter/infra/repository/InMemoryCustomerRepository'
 import { payOrder } from '../../src/application/useCases/Customer/payOrder'
-import { MockPaymentGateway } from '../../src/adapter/gateway/MockPaymentGateway'
+import { ErrorMockPaymentGateway, MockPaymentGateway } from '../../src/adapter/gateway/MockPaymentGateway'
 
 describe('Customer use cases', () => {
 
@@ -21,6 +21,7 @@ describe('Customer use cases', () => {
     const customerRepository = new InMemoryCustomerRepository()
 
     const successPaymentGateway = new MockPaymentGateway()
+    const failurePaymentGateway = new ErrorMockPaymentGateway()
 
     const restaurantId = uuid()
     const customerId = uuid()
@@ -203,5 +204,35 @@ describe('Customer use cases', () => {
         
         expect(success).toBeTruthy()
         expect(thisOrder.status).toBe(OrderStatus.PAID)
+    })
+
+    it('should throw when there\'s an error with payment', async () => {
+        const megaBurger = mealRepository.items.find(meal => meal.name === 'Mega Burger')
+        const burger = mealRepository.items.find(meal => meal.name === 'Burger')
+
+        const order = {
+            deliverAddress: {
+                cityName: 'City',
+                stateName: 'State',
+                streetName: 'Street',
+                zipCode: 'Zip Code'
+            },
+            orderItems: [
+                {
+                    mealId: megaBurger.id,
+                    quantity: 1
+                },
+                {
+                    mealId: burger.id,
+                    quantity: 2
+                }
+            ],
+            restaurantId,
+            customerId
+        }
+
+        const thisOrder = await placeOrder(order, restaurantRepository, orderRepository, mealRepository)
+        expect(payOrder({customerId, orderId: thisOrder.id}, orderRepository, customerRepository, failurePaymentGateway)).rejects.toThrow()
+        expect(thisOrder.status).toBe(OrderStatus.AWAITING_PAYMENT)
     })
 })
