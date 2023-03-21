@@ -17,7 +17,7 @@ export async function payOrder(
     const order = await orderRepository.findById(payOrderDTO.orderId)
     const customer = await customerRepository.findById(payOrderDTO.customerId)
 
-    const success = paymentGateway.process(order.total, customer.cardNumber)
+    const success = await paymentGateway.process(order.total, customer.cardNumber)
 
     if(!success) {
         throw new PaymentError('Something went wrong, please try again!')
