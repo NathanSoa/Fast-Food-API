@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest'
+
 import { InMemoryUserRepository } from '../../src/adapter/infra/repository/InMemoryUserRepository'
-import { UserLoginDTO, UserCreateDTO } from '../../src/application/dto/UserDTO'
 import { JWTTokenGenerator } from '../../src/adapter/infra/authentication/JWTTokenGenerator'
+
+import { UserLoginDTO, UserCreateDTO } from '../../src/application/dto/UserDTO'
+
 import { register } from '../../src/application/useCases/User/register'
 import { authenticate } from '../../src/application/useCases/User/authenticate'
 

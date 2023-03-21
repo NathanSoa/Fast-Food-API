@@ -1,17 +1,21 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { v4 as uuid } from 'uuid'
+
 import { InMemoryMealRepository } from '../../src/adapter/infra/repository/InMemoryMealRepository'
 import { InMemoryRestaurantRepository } from '../../src/adapter/infra/repository/InMemoryRestaurantRepository'
+import { InMemoryOrderRepository } from '../../src/adapter/infra/repository/InMemoryOrderRepository'
+import { InMemoryCustomerRepository } from '../../src/adapter/infra/repository/InMemoryCustomerRepository'
+
+import { ErrorMockPaymentGateway, MockPaymentGateway } from '../../src/adapter/gateway/MockPaymentGateway'
+
 import { Meal } from '../../src/application/domain/Meal'
 import { Customer } from '../../src/application/domain/Customer'
 import { Restaurant } from '../../src/application/domain/Restaurant'
+import { OrderStatus } from '../../src/application/domain/Order'
+
 import { findMeal } from '../../src/application/useCases/Customer/findMeal'
-import { Order, OrderStatus } from '../../src/application/domain/Order'
 import { placeOrder } from '../../src/application/useCases/Customer/placeOrder'
-import { InMemoryOrderRepository } from '../../src/adapter/infra/repository/InMemoryOrderRepository'
-import { InMemoryCustomerRepository } from '../../src/adapter/infra/repository/InMemoryCustomerRepository'
 import { payOrder } from '../../src/application/useCases/Customer/payOrder'
-import { ErrorMockPaymentGateway, MockPaymentGateway } from '../../src/adapter/gateway/MockPaymentGateway'
 
 describe('Customer use cases', () => {
 
@@ -171,7 +175,7 @@ describe('Customer use cases', () => {
         expect(placeOrder(order, restaurantRepository, orderRepository, mealRepository)).rejects.toThrow()
     })
 
-    it('should correctly update the order status', async () => {
+    it ('should correctly update the order status', async () => {
         const megaBurger = mealRepository.items.find(meal => meal.name === 'Mega Burger')
         const burger = mealRepository.items.find(meal => meal.name === 'Burger')
 

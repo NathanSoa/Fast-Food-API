@@ -1,8 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest'
+
 import { InMemoryMealRepository } from '../../src/adapter/infra/repository/InMemoryMealRepository'
 import { InMemoryRestaurantRepository } from '../../src/adapter/infra/repository/InMemoryRestaurantRepository'
+
 import { RestaurantCreateDTO } from '../../src/application/dto/RestaurantDTO'
 import { Meal } from '../../src/application/domain/Meal'
+
 import { register } from '../../src/application/useCases/Restaurant/register'
 import { addMeal } from '../../src/application/useCases/Restaurant/addMeal'
 import { removeMeal } from '../../src/application/useCases/Restaurant/removeMeal'
